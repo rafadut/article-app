@@ -3,44 +3,69 @@
     ViewBag.Title = "Create";
 }
 <h2>Create</h2>
-@using (Html.BeginForm())
+@using (Ajax.BeginForm("Create",
+new AjaxOptions { OnSuccess = "OnSuccess", OnFailure = "OnFailure" }))
 {
     @Html.ValidationSummary(true)
-    <fieldset>
-        <legend>Articles</legend>
-        <div class="editor-label">
-            @Html.LabelFor(model => model.Title)
-        </div>
-        <div class="editor-field">
-            @Html.EditorFor(model => model.Title)
-            @Html.ValidationMessageFor(model => model.Title)
-        </div>
-        <div class="editor-label">
-            @Html.LabelFor(model => model.CreateDate)
-        </div>
-        <div class="editor-field">
-            @Html.EditorFor(model => model.CreateDate)
-            @Html.ValidationMessageFor(model => model.CreateDate)
-        </div>
-        <div class="editor-label">
-            @Html.LabelFor(model => model.Description)
-        </div>
-        <div class="editor-field">
-            @Html.EditorFor(model => model.Description)
-            @Html.ValidationMessageFor(model => model.Description)
-        </div>
-        <div class="editor-label">
-            @Html.LabelFor(model => model.Price)
-        </div>
-        <div class="editor-field">
-            @Html.EditorFor(model => model.Price)
-            @Html.ValidationMessageFor(model => model.Price)
-        </div>
-        <p>
-            <input type="submit" value="Create" />
-        </p>
-    </fieldset>
+<fieldset>
+    <legend>Articles</legend>
+    <div class="editor-label">
+        @Html.LabelFor(model => model.Title)
+    </div>
+    <div class="editor-field">
+        @Html.EditorFor(model => model.Title)
+        @Html.ValidationMessageFor(model => model.Title)
+    </div>
+    <div class="editor-label">
+        @Html.LabelFor(model => model.CreateDate)
+    </div>
+    <div class="editor-field">
+        @Html.EditorFor(model => model.CreateDate)
+        @Html.ValidationMessageFor(model => model.CreateDate)
+    </div>
+    <div class="editor-label">
+        @Html.LabelFor(model => model.Description)
+    </div>
+    <div class="editor-field">
+        @Html.EditorFor(model => model.Description)
+        @Html.ValidationMessageFor(model => model.Description)
+    </div>
+    <div class="editor-label">
+        @Html.LabelFor(model => model.Price)
+    </div>
+    <div class="editor-field">
+        @Html.EditorFor(model => model.Price)
+        @Html.ValidationMessageFor(model => model.Price)
+    </div>
+    <div id="progressbar"></div>
+    <img src="~/Content/themes/base/images/bola.jpg" class="socialicon" />
+    <p>
+        <input type="submit" value="Create" />
+    </p>
+</fieldset>
 }
+<p id="errorMessage" />
+<script type="text/javascript">
+
+    function OnSuccess(response) {
+        //do something
+    }
+    function OnFailure(response) {
+        //show failure
+        document.getElementById('errorMessage').innerHTML = 'THERE WAS AN ERROR';
+    }
+
+    $("#CreateDate").datepicker();
+
+    $("#progressbar").progressbar({
+        value: 25
+    });
+
+    $('.socialicon').mouseover(function () {
+        $(this).effect("bounce", { times: 5 }, 300);
+    });
+
+</script>
 <div>
     @Html.ActionLink("Back to List", "Index")
 </div>
