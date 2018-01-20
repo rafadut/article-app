@@ -17,6 +17,9 @@ namespace ArticleApp
             bundles.Add(new ScriptBundle("~/bundles/jquery-ui").Include(
                         "~/Scripts/jquery-ui*"));
 
+            bundles.Add(new ScriptBundle("~/bundles/jquerymobile").Include(
+                        "~/Scripts/jquery.mobile*"));
+
             // Use a versão em desenvolvimento do Modernizr para desenvolver e aprender. Em seguida, quando estiver
             // pronto para a produção, utilize a ferramenta de build em https://modernizr.com para escolher somente os testes que precisa.
             bundles.Add(new ScriptBundle("~/bundles/modernizr").Include(
