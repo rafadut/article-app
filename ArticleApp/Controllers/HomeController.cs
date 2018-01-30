@@ -1,6 +1,7 @@
 ﻿using ArticleApp.Models;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.Contracts;
 using System.Globalization;
 using System.Linq;
 using System.Web;
@@ -12,6 +13,7 @@ namespace ArticleApp.Controllers
     {
         public ActionResult Index()
         {
+            GetArticle(0);
             return View();
         }
 
@@ -29,6 +31,7 @@ namespace ArticleApp.Controllers
             return View();
         }
 
+        [HandleError(ExceptionType = typeof(System.IOException), View = "FileError")]
         public ActionResult Create()
         {
             return View();
@@ -44,6 +47,43 @@ namespace ArticleApp.Controllers
                 return RedirectToAction("Index");
             }
             return View(article);
+        }
+
+        protected override void OnException(ExceptionContext exceptionContext)
+        {
+            if (exceptionContext.IsChildAction)
+            {
+                //we don't want to display the error screen if it is a child action,
+                base.OnException(exceptionContext);
+                return;
+            }
+            // log the exception in your configured logger
+            //Logger.Log(exceptionContext.Exception);
+            //handle when the app is not configured to use the custom error path
+            if (!exceptionContext.HttpContext.IsCustomErrorEnabled)
+            {
+                exceptionContext.ExceptionHandled = true;
+                this.View("ErrorManager").ExecuteResult(this.ControllerContext);
+            }
+        }
+
+        internal Article GetArticle(int id)
+        {
+            //if (id <= 0)
+            //{
+            //    throw new ArgumentException("id");
+            //}
+            Contract.Requires(id > 0);
+
+            Contract.Ensures(Contract.Result<Article>() != null);
+
+            return new Article();
+        }
+
+        [ContractInvariantMethod]
+        protected void ManageInvariant()
+        {
+            //System.Diagnostics.Contracts.Invariant(this.Id < 0);
         }
 
         //public JsonResult IsUserAvailable(string username)
