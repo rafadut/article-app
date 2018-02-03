@@ -6,13 +6,19 @@ using System.Globalization;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.Security;
 
 namespace ArticleApp.Controllers
 {
     public class HomeController : Controller
     {
+        private object dbContext;
+
         public ActionResult Index()
         {
+            // Make sure the principals are in sync
+            System.Threading.Thread.CurrentPrincipal = System.Web.HttpContext.Current.User;
+
             GetArticle(0);
             return View();
         }
@@ -84,6 +90,54 @@ namespace ArticleApp.Controllers
         protected void ManageInvariant()
         {
             //System.Diagnostics.Contracts.Invariant(this.Id < 0);
+        }
+
+        //[ControllerAction]
+        public void Authenticate(string uname, string pass)
+        {
+            //User user = dbContext.Users.First(x => x.UserName.Equals(uname()));
+            //if (user != null && user.Password.Equals(EncryptHash(pass)))
+            //{
+            //    FormsAuthentication.SetAuthCookie(uname, false);
+            //    RedirectToAction("Main", "DashBoard");
+            //}
+            // unable to login
+            RenderView("Index", new LoginViewData
+            {
+                ErrorMessage = "Invalid credentials."
+            });
+        }
+
+        public void CreateAuthTicket()
+        {
+            string userName = "userName";
+            bool createPersistentCookie = true;
+            string[] rolesArr = { "role1", "role2" };
+
+            FormsAuthenticationTicket authTicket = new FormsAuthenticationTicket(
+                1,
+                userName,
+                DateTime.Now,
+                DateTime.Now.AddDays(90),
+                createPersistentCookie, // a Boolean indicating whether a cookie
+                                        // should be created on the user's machine
+                String.Join(";", rolesArr) //user's roles
+                );
+            // add cookie to response stream
+            string encTicket = FormsAuthentication.Encrypt(authTicket);
+            System.Web.HttpCookie authCookie = new System.Web.HttpCookie(FormsAuthentication.
+            FormsCookieName, encTicket);
+            System.Web.HttpContext.Current.Response.Cookies.Add(authCookie);
+        }
+
+        private object EncryptHash(string pass)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void RenderView(string v, LoginViewData loginViewData)
+        {
+            throw new NotImplementedException();
         }
 
         //public JsonResult IsUserAvailable(string username)
