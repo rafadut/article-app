@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Globalization;
 using System.Linq;
+using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Security;
@@ -19,10 +20,18 @@ namespace ArticleApp.Controllers
             // Make sure the principals are in sync
             System.Threading.Thread.CurrentPrincipal = System.Web.HttpContext.Current.User;
 
+            //string[] userRolesArray = Roles.GetRolesForUser();
+            //string[] rolesForContentArray = dbContext.GetRolesForViewFromDb(thisViewName);
+            //if (userRolesArray.Intersect(rolesForContentArray).Count > 0)
+            //{
+            //    // The user is authorized
+            //}
+
             GetArticle(0);
             return View();
         }
 
+        [Authorize(Roles = "Administrator,CanEditOrder")]
         public ActionResult About()
         {
             ViewBag.Message = "Your application description page.";
@@ -138,6 +147,23 @@ namespace ArticleApp.Controllers
         private void RenderView(string v, LoginViewData loginViewData)
         {
             throw new NotImplementedException();
+        }
+
+        private void FillClientCredentials()
+        {
+            WCFServiceCient client = new WCFServiceCient();
+            client.ClientCredentials.User.UserName = "Apps User Name";
+            client.ClientCredentials.User.Password = "Apps Password";
+        }
+
+        private void FillClientCredentialsWithWindowsAuthentication()
+        {
+            NetworkCredential credentials = new NetworkCredential();
+            credentials.Domain = "windows domain";
+            credentials.UserName = " Apps User Name";
+            credentials.Password = " Apps Password";
+            WCFServiceCient client = new WCFServiceCient();
+            client.ClientCredentials.Windows.ClientCredential = credentials;
         }
 
         //public JsonResult IsUserAvailable(string username)

@@ -144,6 +144,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ErrorManagerController.cs" />
+    <Compile Include="Controllers\WCFServiceCient.cs" />
     <Compile Include="Models\CustomPrincipal.cs" />
     <Compile Include="Models\LoginViewData.cs" />
     <Compile Include="Models\User.cs" />
@@ -517,6 +518,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Connected Services\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
